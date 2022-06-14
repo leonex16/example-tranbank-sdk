@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --watch src/**/*.ts src/index.ts",
-    "test": "playwright test"
+    "test": "playwright test",
+    "build": "tsc -p tsconfig.json"
   },
   "keywords": [],
   "author": "Leonel Espinoza Sotelo",
