@@ -8,4 +8,4 @@ Container
 
 const server = new NodeServer();
 
-server.listen(3000);
+server.listen();
