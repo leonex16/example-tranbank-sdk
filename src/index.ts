@@ -1,10 +1,7 @@
-import { TransbankOneClickPaymentMethod } from "./modules/payment-method/insfrastructure/transbank/one-click/payment-method";
-import { NodeServer } from "./modules/server/infrastructure/vanilla/server";
-import { Container } from "./shared/domain/service/dependency-injection/dependency-injection";
+import { registerDependencies } from '#src/config/inyection-container';
+import { NodeServer } from "#src/modules/server/infrastructure/vanilla/server";
 
-Container
-  .register('PaymentMethod', new TransbankOneClickPaymentMethod())
-  .register('Server', new NodeServer())
+registerDependencies();
 
 const server = new NodeServer();
 
