@@ -2,8 +2,8 @@
 
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
-  testDir: './tests',
-  testMatch: ['**/tests/**/*.test.ts'],
+  testDir: './test',
+  testMatch: ['**/test/**/*.test.ts'],
   use: {
     headless: false,
     browserName: 'chromium',
