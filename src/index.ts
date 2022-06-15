@@ -1,4 +1,4 @@
-import { registerDependencies } from '#src/config/inyection-container';
+import { registerDependencies } from '#/src/config/register-dependencies';
 import { NodeServer } from "#src/modules/server/infrastructure/vanilla/server";
 
 registerDependencies();
