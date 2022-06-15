@@ -1,4 +1,4 @@
-import { Server } from '../../../../src/modules/server/domain/server';
+import { Server } from '../../../../../src/modules/server/domain/server';
 
 export class SpyServer implements Server {
   public methodCalled = false;
