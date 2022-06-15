@@ -7,8 +7,9 @@ export class PaymentMethodConfirmator {
     @Inject('PaymentMethod') private readonly _paymentMethod?: PaymentMethod
   ) { }
 
-  async invoke ( token: string ): Promise<void> {
+  invoke ( token: string ): Promise<void> {
     if ( !this._paymentMethod ) throw new Error( 'PaymentMethod is required' );
+    if ( !token ) throw new Error( 'Token is required' );
 
     return this._paymentMethod.confirm( token );
   }
