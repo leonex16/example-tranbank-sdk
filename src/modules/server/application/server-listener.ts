@@ -1,5 +1,5 @@
-import { Inject, InjectionTarget } from '../../../shared/domain/service/dependency-injection/dependency-injection';
-import { Server } from '../domain/server';
+import { Inject, InjectionTarget } from '#src/shared/domain/service/dependency-injection/index';
+import { Server } from '#src/modules/server/domain/server';
 
 @InjectionTarget()
 export class ServerListener {

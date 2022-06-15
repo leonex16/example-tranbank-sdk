@@ -28,5 +28,9 @@
   "dependencies": {
     "@types/node": "^17.0.40",
     "transbank-sdk": "^3.0.2"
+  },
+  "imports": {
+    "#/*": "./*.js",
+    "#src/*": "./src/*.js"
   }
 }

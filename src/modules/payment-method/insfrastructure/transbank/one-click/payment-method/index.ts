@@ -2,7 +2,7 @@ import { IntegrationApiKeys, IntegrationCommerceCodes, Oneclick, Options } from 
 
 import type MallInscription from 'transbank-sdk/dist/es5/transbank/webpay/oneclick/mall_inscription';
 
-import { PaymentMethod } from '../../../../domain/payment-method';
+import { PaymentMethod } from '#src/modules/payment-method/domain/payment-method';
 
 import type { CardType, InscriptionFinish, InscriptionStart } from './types';
 

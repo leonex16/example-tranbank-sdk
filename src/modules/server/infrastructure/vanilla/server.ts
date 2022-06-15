@@ -1,10 +1,10 @@
 import http from 'node:http';
 
-import { Server } from '../../domain/server';
-import { version } from '../../../../../package.json';
-import { PaymentMethodCreator } from '../../../payment-method/application/payment-method-creator';
-import { PaymentMethodConfirmator } from '../../../payment-method/application/payment-method-confirmator';
-import { PaymentMethodDeleter } from '../../../payment-method/application/payment-method-deleter';
+import { Server } from '#src/modules/server/domain/server';
+import { version } from '../../../../../package.json'; 
+import { PaymentMethodCreator } from '#src/modules/payment-method/application/payment-method-creator';
+import { PaymentMethodConfirmator } from '#src/modules/payment-method/application/payment-method-confirmator';
+import { PaymentMethodDeleter } from '#src/modules/payment-method/application/payment-method-deleter';
 
 const parseToUrl = (path = '/') => new URL(path, 'http://localhost');
 

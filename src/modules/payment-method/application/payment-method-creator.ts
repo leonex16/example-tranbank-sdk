@@ -1,5 +1,5 @@
-import { Inject, InjectionTarget } from '../../../shared/domain/service/dependency-injection/dependency-injection';
-import { PaymentMethod } from '../domain/payment-method';
+import { Inject, InjectionTarget } from '#src/shared/domain/service/dependency-injection/index';
+import { PaymentMethod } from '#src/modules/payment-method/domain/payment-method';
 
 @InjectionTarget()
 export class PaymentMethodCreator {
