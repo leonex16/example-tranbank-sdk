@@ -52,8 +52,6 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
   }
 
   async confirm ( token: string ) {
-    if ( !token ) throw new Error( 'No token provided' );
-
     const resp: InscriptionFinish = await this.inscription.finish( token );
 
     this.autorizationCode = resp.authorization_code;

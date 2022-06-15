@@ -25,9 +25,8 @@ export function InjectionTarget () {
   return function <T extends { new ( ...args: any[] ): object }>( constructor: T ) {
     return class extends constructor {
       constructor ( ...args: any[] ) {
-
         const injections = ( constructor as any ).injections as Injection[];
-        const injectedArgs: any[] = injections.map( ( { index, key } ) => Container.getInstance( key ) ?? args[index] );
+        const injectedArgs: any[] = injections.map( ( { index, key } ) => args[index] ?? Container.getInstance( key ) );
 
         super( ...injectedArgs );
       }
