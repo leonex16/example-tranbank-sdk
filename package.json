@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node dist/src/index.js",
+    "build": "NODE_ENV=production tsc -p tsconfig.json",
     "dev": "NODE_ENV=development ts-node-dev --respawn --watch src/**/*.ts src/index.ts",
-    "test": "npm run build && NODE_ENV=testing playwright test",
-    "build": "NODE_ENV=production tsc -p tsconfig.json"
+    "test": "NODE_ENV=testing playwright test",
+    "test:watch": "npm run test -- --watch",
+    "test:build": "npm run build && npm run test"
   },
   "keywords": [],
   "author": "Leonel Espinoza Sotelo",
@@ -30,7 +32,6 @@
     "transbank-sdk": "^3.0.2"
   },
   "imports": {
-    "#/*": "./*.js",
     "#src/*": "./src/*.js"
   }
 }
