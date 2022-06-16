@@ -26,21 +26,6 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
     this.inscription = new Oneclick.MallInscription( opts );
   }
 
-  get cardInfo () {
-    if ( !this.card ) throw new Error( 'Not set card yet. Maybe you missing to use confirm method' );
-
-    return this.card;
-  }
-
-  get keysToTransaction () {
-    if ( !this.autorizationCode || !this.tbkUser ) throw new Error( 'Not set card yet. Maybe you missing to use confirm method' );
-
-    return {
-      autorizationCode: this.autorizationCode,
-      tbkUser: this.tbkUser
-    };
-  }
-
   async getUrlToAdd ( username: string, email: string ) {
     const resp: InscriptionStart = await this.inscription.start( username, email, this.URL_TO_REDIRECT );
     this.username = username;
@@ -51,15 +36,18 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
     };
   }
 
-  async confirm ( token: string ) {
+  async confirm ( token: string ): Promise<any> {
     const resp: InscriptionFinish = await this.inscription.finish( token );
 
-    this.autorizationCode = resp.authorization_code;
     this.tbkUser = resp.tbk_user;
-    this.card = {
-      type: resp.card_type,
-      number: resp.card_number
-    };
+
+    return {
+      card: {
+        type: resp.card_type,
+        number: resp.card_number
+      },
+      tbkUser: resp.tbk_user
+    }
   }
 
   async delete () {

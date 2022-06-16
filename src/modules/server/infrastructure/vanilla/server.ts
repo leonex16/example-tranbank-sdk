@@ -54,10 +54,10 @@ export class NodeServer implements Server {
       if (Array.isArray(tbkTkn)) throw new Error('tbk-token is not string');
 
       const paymentMethodConfirmator = new PaymentMethodConfirmator();
-      await paymentMethodConfirmator.invoke(tbkTkn);
 
-      res.writeHead(204);
-      res.end();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(await paymentMethodConfirmator.invoke(tbkTkn)));
+
       return;
     }
 
