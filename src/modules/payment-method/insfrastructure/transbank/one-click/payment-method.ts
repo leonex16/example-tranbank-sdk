@@ -4,7 +4,7 @@ import type MallInscription from 'transbank-sdk/dist/es5/transbank/webpay/onecli
 
 import { PaymentMethod } from '#src/modules/payment-method/domain/payment-method';
 
-import type { CardType, InscriptionFinish, InscriptionStart } from './types';
+import type { InscriptionFinish, InscriptionStart } from './types';
 
 export enum TranskbankUrlEnvironment {
   PROD = 'https://webpay3g.transbank.cl',
@@ -17,9 +17,7 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
 
   private username: string | null = null;
   private inscription: MallInscription;
-  private autorizationCode: string | null = null;
   private tbkUser: string | null = null;
-  private card: { type: CardType, number: string } | null = null;
 
   constructor () {
     const opts = new Options( IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, this.URL_ENVIRONMENT );
@@ -52,7 +50,7 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
 
   async delete () {
     if ( !this.username ) throw new Error( 'No username provided' );
-    if ( !this.card || !this.tbkUser ) throw new Error( 'Not set card yet' );
+    if ( !this.tbkUser ) throw new Error( 'No tbkUser setting' );
 
     await this.inscription.delete( this.tbkUser, this.username );
   }
