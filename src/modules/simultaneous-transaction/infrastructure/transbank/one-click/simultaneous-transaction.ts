@@ -34,14 +34,47 @@ export class TransbankOneClickTransaction implements SimultaneousTransaction {
       if ( shouldReject ) break;
     }
 
-    return {
-      purchaseOrder: successAuthorization ? transaction : null
+    const valueToReturn = {
+      'accountingDate': transaction.accounting_date,
+      'buyOrder': transaction.buy_order,
+      'cardDetail': { 'cardNumber': transaction.card_detail.card_number },
+      'details': transaction.details.map( item => ( {
+        'amount': item.amount,
+        'authorizationCode': item.authorization_code,
+        'buyOrder': item.buy_order,
+        'commerceCode': item.commerce_code,
+        'installmentsNumber': item.installments_number,
+        'paymentTypeCode': item.payment_type_code,
+        'responseCode': item.response_code,
+        'status': item.status
+      } ) ),
+      'transactionDate': transaction.transaction_date
     };
+
+    return successAuthorization ? valueToReturn : null;
   }
 
   async getStatus ( purchaseOrder: string ) {
     const transaction: TranbankTransaction = await this.transaction.status( purchaseOrder );
-    return transaction;
+
+    const valueToReturn = {
+      'accountingDate': transaction.accounting_date,
+      'buyOrder': transaction.buy_order,
+      'cardDetail': { 'cardNumber': transaction.card_detail.card_number },
+      'details': transaction.details.map( item => ( {
+        'amount': item.amount,
+        'authorizationCode': item.authorization_code,
+        'buyOrder': item.buy_order,
+        'commerceCode': item.commerce_code,
+        'installmentsNumber': item.installments_number,
+        'paymentTypeCode': item.payment_type_code,
+        'responseCode': item.response_code,
+        'status': item.status
+      } ) ),
+      'transactionDate': transaction.transaction_date
+    };
+
+    return valueToReturn;
   }
 
   async reverse ( mainPurchaseOrder: string, childPurchaseOrder: string, amount: number ) {
