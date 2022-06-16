@@ -1,8 +1,10 @@
 import { SimultaneousTransaction } from '#src/modules/simultaneous-transaction/domain/simultaneous-transaction';
+import { Inject, InjectionTarget } from '#src/shared/domain/service/dependency-injection/index';
 
+@InjectionTarget()
 export class SimultaneousTransactionAutorizator {
   constructor (
-    private _transaction?: SimultaneousTransaction
+    @Inject( 'SimultaneousTransaction' ) private readonly _transaction?: SimultaneousTransaction
   ) { }
 
   async invoke ( username: string, tbkUser: string, purchaseOrder: string, detail: unknown[] ) {
