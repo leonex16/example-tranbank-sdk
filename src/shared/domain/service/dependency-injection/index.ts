@@ -14,7 +14,7 @@ export class Container {
 }
 
 export function Inject ( key: DependencyKey ) {
-  return function ( target: any, propertyKey: string, parameterPosition: number ) {
+  return function ( target: any, _: string, parameterPosition: number ) {
     const injection: Injection = { index: parameterPosition, key };
     const existingInjections: Injection[] = target.injections ?? [];
     target.injections = [ ...existingInjections, injection ];

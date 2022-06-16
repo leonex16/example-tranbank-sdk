@@ -4,7 +4,7 @@ import { PaymentMethodConfirmator } from '../../../../dist/src/modules/payment-m
 import { PaymentMethodCreator } from '../../../../dist/src/modules/payment-method/application/payment-method-creator';
 import { PaymentMethodDeleter } from '../../../../dist/src/modules/payment-method/application/payment-method-deleter';
 import { PaymentMethodSpy } from './__mocks__/payment-method-spy';
-import { registerDependencies } from '../../../../dist/src/config/inyection-container';
+import { registerDependencies } from '../../../../dist/src/config/register-dependencies';
 
 test.describe( 'Application Payment Method', () => {
   test.describe( 'PaymentMethodCreator', () => {

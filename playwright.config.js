@@ -6,8 +6,7 @@ const config = {
   testMatch: [ '**/test/**/*.test.ts' ],
   use: {
     headless: false,
-    browserName: 'chromium',
-    baseURL: 'http://localhost:3000'
+    browserName: 'chromium'
   }
 };
 

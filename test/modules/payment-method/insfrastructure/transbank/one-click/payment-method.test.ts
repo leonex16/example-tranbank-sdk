@@ -18,7 +18,7 @@ const getUrlToCardRegister = async () => {
 };
 
 const getTokenAfterCardRegister = async ( page: Page, url:string ): Promise<string | null> => {
-  const delay = Math.floor( Math.random() * ( 350 - 100 ) + 100 );
+  const delay = Math.floor( Math.random() * ( 400 - 200 ) + 200 );
 
   await page.goto( url );
 
@@ -56,7 +56,7 @@ const getTokenAfterCardRegister = async ( page: Page, url:string ): Promise<stri
   const pageUrl = new URL( page.url() );
   const tbkToken = pageUrl.searchParams.get( 'TBK_TOKEN' );
 
-  await page.waitForTimeout( 200 );
+  await page.waitForTimeout( delay );
   await page.close();
 
   return tbkToken;

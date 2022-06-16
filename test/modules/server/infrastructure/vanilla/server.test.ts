@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { NodeServer } from '../../../../../dist/src/modules/server/infrastructure/vanilla/server';
 import { ServerListener } from '../../../../../dist/src/modules/server/application/server-listener';
-import { registerDependencies } from '../../../../../dist/src/config/inyection-container';
+import { registerDependencies } from '../../../../../dist/src/config/register-dependencies';
 import { version } from '../../../../../package.json';
 
 test.beforeEach( () => {
@@ -13,6 +13,8 @@ test.beforeAll( async () => {
   const server = new ServerListener( new NodeServer() );
   await server.invoke();
 } );
+
+test.use( { baseURL: 'http://localhost:3000' } );
 
 test.describe( 'Infrastructure NodeServer', () => {
   test( 'should use 3000 port by default', async ( { request } ) => {
