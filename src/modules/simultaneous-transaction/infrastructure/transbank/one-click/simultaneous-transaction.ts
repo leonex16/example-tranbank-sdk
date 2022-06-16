@@ -84,12 +84,6 @@ export class TransbankOneClickTransaction implements SimultaneousTransaction {
     return response;
   }
 
-  // async deferredCapture(purchaseOrder: string, amountToCapture: number, authorizationCode: string) {
-  //   const commerceCode = IntegrationCommerceCodes.ONECLICK_MALL_CHILD1;
-  //   const response = await this.transaction.capture(commerceCode, purchaseOrder, authorizationCode, amountToCapture);
-  //   return response;
-  // }
-
   private generateChildPurchaseOrderId ( mainPurchaseOrder: string ): string {
     return `${ mainPurchaseOrder }XXX`;
     // return `${mainPurchaseOrder}${new Date().getTime()}`;
