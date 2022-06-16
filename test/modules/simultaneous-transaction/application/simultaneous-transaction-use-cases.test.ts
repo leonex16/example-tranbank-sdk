@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { SimultaneousTransactionAutorizator } from '../../../../dist/src/modules/simultaneous-transaction/application/simultaneous-transaction-autorizator';
+import { SimultaneousTransactionAuthorizator } from '../../../../dist/src/modules/simultaneous-transaction/application/simultaneous-transaction-authorizator';
 import { SimultaneousTransactionReversor } from '../../../../dist/src/modules/simultaneous-transaction/application/simultaneous-transaction-reversor';
 import { SimultaneousTransactionSpy } from './__mocks__/simultaneous-transaction-spy';
 import { SimultaneousTransactionStatus } from '../../../../dist/src/modules/simultaneous-transaction/application/simultaneous-transaction-status';
@@ -15,7 +15,7 @@ test.describe( 'Application Simultaneous Transaction', () => {
   test.describe( 'SimultaneousTransactionAutorizator', () => {
     test( 'should called invoke method', async () => {
       const simultaneousTransactionSpy = new SimultaneousTransactionSpy();
-      const simultaneousTransactionAutorizator = new SimultaneousTransactionAutorizator( simultaneousTransactionSpy );
+      const simultaneousTransactionAutorizator = new SimultaneousTransactionAuthorizator( simultaneousTransactionSpy );
       await simultaneousTransactionAutorizator.invoke( 'USERNAME', 'TBK_USER', 'PO-1234', [] );
 
       expect( simultaneousTransactionSpy.methodCalledCounter ).toBe( 1 );
@@ -23,7 +23,7 @@ test.describe( 'Application Simultaneous Transaction', () => {
 
     test( 'should inyject automatically its dependecy', async () => {
       registerDependencies();
-      const simultaneousTransactionAutorizator = new SimultaneousTransactionAutorizator();
+      const simultaneousTransactionAutorizator = new SimultaneousTransactionAuthorizator();
 
       await expect( simultaneousTransactionAutorizator.invoke( username, tbkUser, purchaseOrder, detail ) ).resolves.toBeTruthy();
     } );
@@ -40,7 +40,7 @@ test.describe( 'Application Simultaneous Transaction', () => {
 
     test( 'should inyject automatically its dependecy', async () => {
       registerDependencies();
-      const simultaneousTransactionAutorizator = new SimultaneousTransactionAutorizator();
+      const simultaneousTransactionAutorizator = new SimultaneousTransactionAuthorizator();
       const simultaneousTransactionStatus = new SimultaneousTransactionStatus();
       const transaction = await simultaneousTransactionAutorizator.invoke( username, tbkUser, purchaseOrder, detail );
 
@@ -59,7 +59,7 @@ test.describe( 'Application Simultaneous Transaction', () => {
 
     test( 'should inyject automatically its dependecy', async () => {
       registerDependencies();
-      const simultaneousTransactionAutorizator = new SimultaneousTransactionAutorizator();
+      const simultaneousTransactionAutorizator = new SimultaneousTransactionAuthorizator();
       const simultaneousTransactionReversor = new SimultaneousTransactionReversor();
       const transaction = await simultaneousTransactionAutorizator.invoke( username, tbkUser, purchaseOrder, detail );
       const item = transaction.details[ 0 ];

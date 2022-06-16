@@ -2,7 +2,7 @@ import { SimultaneousTransaction } from '#src/modules/simultaneous-transaction/d
 import { Inject, InjectionTarget } from '#src/shared/domain/service/dependency-injection/index';
 
 @InjectionTarget()
-export class SimultaneousTransactionAutorizator {
+export class SimultaneousTransactionAuthorizator {
   constructor (
     @Inject( 'SimultaneousTransaction' ) private readonly _transaction?: SimultaneousTransaction
   ) { }

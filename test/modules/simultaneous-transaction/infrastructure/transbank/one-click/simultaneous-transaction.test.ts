@@ -8,7 +8,7 @@ import { SimultaneousTransactionReversor }
   from '../../../../../../dist/src/modules/simultaneous-transaction/application/simultaneous-transaction-reversor';
 import { SimultaneousTransactionStatus }
   from '../../../../../../dist/src/modules/simultaneous-transaction/application/simultaneous-transaction-status';
-import { TransbankOneClickTransaction }
+import { SimultaneousTransbankOneClickTransaction }
   from '../../../../../../dist/src/modules/simultaneous-transaction/infrastructure/transbank/one-click/simultaneous-transaction';
 
 const username = 'U-92424';
@@ -18,7 +18,7 @@ const detail = [ { amount: Math.floor( Math.random() * ( 10_000 - 1_000 ) + 1_00
 let simultaneousTransactionImplementation: SimultaneousTransaction;
 
 test.beforeEach( () => {
-  simultaneousTransactionImplementation = new TransbankOneClickTransaction();
+  simultaneousTransactionImplementation = new SimultaneousTransbankOneClickTransaction();
 } );
 
 test.describe( 'Infrastructure Simultaneous Transaction Transbank One Click', () => {
@@ -37,7 +37,7 @@ test.describe( 'Infrastructure Simultaneous Transaction Transbank One Click', ()
     } );
 
     test.describe( 'SimultaneousTransactionStatus', () => {
-      test( 'should inyject automatically its dependecy', async () => {
+      test( 'should returns purcharse order detail by purchase order', async () => {
         const simultaneousTransactionAutorizator = new SimultaneousTransactionAutorizator( simultaneousTransactionImplementation );
         const simultaneousTransactionStatus = new SimultaneousTransactionStatus( simultaneousTransactionImplementation );
         const transaction = await simultaneousTransactionAutorizator.invoke( username, tbkUser, purchaseOrder, detail );
@@ -52,7 +52,7 @@ test.describe( 'Infrastructure Simultaneous Transaction Transbank One Click', ()
     } );
 
     test.describe( 'SimultaneousTransactionReversor', () => {
-      test( 'should inyject automatically its dependecy', async () => {
+      test( 'should returns an object with type property', async () => {
         const simultaneousTransactionAutorizator = new SimultaneousTransactionAutorizator( simultaneousTransactionImplementation );
         const simultaneousTransactionReversor = new SimultaneousTransactionReversor( simultaneousTransactionImplementation );
         const transaction = await simultaneousTransactionAutorizator.invoke( username, tbkUser, purchaseOrder, detail );

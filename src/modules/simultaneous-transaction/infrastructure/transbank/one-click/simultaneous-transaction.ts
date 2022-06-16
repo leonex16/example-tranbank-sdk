@@ -7,7 +7,7 @@ import { TranskbankUrlEnvironment } from '#src/modules/payment-method/insfrastru
 
 import type { TranbankTransaction, TransactionItem, TransbankRefound } from '#src/modules/simultaneous-transaction/infrastructure/transbank/one-click/types';
 
-export class TransbankOneClickTransaction implements SimultaneousTransaction {
+export class SimultaneousTransbankOneClickTransaction implements SimultaneousTransaction {
   private URL_ENVIRONMENT = TranskbankUrlEnvironment.DEV; // MOVE TO ENV
 
   private transaction: MallTransaction;
