@@ -10,20 +10,29 @@ import { TransbankOneClickPaymentMethod } from '../../../../../../dist/src/modul
 
 let paymentMethodImplementation: PaymentMethod;
 
-const cardRegisterFlow = async ( page: Page, url:string ): Promise<string | null> => {
+const getUrlToCardRegister = async () => {
+  const username = `U-${ Math.floor( Math.random() * 1000000 ) }`;
+  const paymentMethodCreator = new PaymentMethodCreator( paymentMethodImplementation );
+  const dataToCreatePaymentMethod = await paymentMethodCreator.invoke( username, `${ username }@gmail.com` );
+  return `${ dataToCreatePaymentMethod.url }?TBK_TOKEN=${ dataToCreatePaymentMethod.token }`;
+};
+
+const getTokenAfterCardRegister = async ( page: Page, url:string ): Promise<string | null> => {
+  const delay = Math.floor( Math.random() * ( 350 - 100 ) + 100 );
+
   await page.goto( url );
 
   // Fill transbank form
   await page.locator( 'button:has-text("Crédito")' ).click();
 
   await page.locator( '[placeholder="XXXX XXXX XXXX XXXX"]' ).click();
-  await page.locator( '[placeholder="XXXX XXXX XXXX XXXX"]' ).type( '4051 8856 0044 6623', { delay: 250 } );
+  await page.locator( '[placeholder="XXXX XXXX XXXX XXXX"]' ).type( '4051 8856 0044 6623', { delay } );
 
   await page.locator( '[placeholder="MM\\/AA"]' ).click();
-  await page.locator( '[placeholder="MM\\/AA"]' ).type( '1212', { delay: 250 } );
+  await page.locator( '[placeholder="MM\\/AA"]' ).type( '1212', { delay } );
 
   await page.locator( '[placeholder="・・・"]' ).click();
-  await page.locator( '[placeholder="・・・"]' ).type( '123', { delay: 250 } );
+  await page.locator( '[placeholder="・・・"]' ).type( '123', { delay } );
 
   await page.locator( 'span:has-text("Es mi correo")' ).click();
 
@@ -71,13 +80,9 @@ test.describe( 'Infrastructure Transbank One Click', () => {
     } );
 
     test.describe( 'PaymentMethodConfirmator', () => {
-      test.only( 'should returns keys to transaction', async ( { page } ) => {
-        const username = `U-${ Math.floor( Math.random() * 1000000 ) }`;
-        const paymentMethodCreator = new PaymentMethodCreator( paymentMethodImplementation );
-        const dataToCreatePaymentMethod = await paymentMethodCreator.invoke( username, `${ username }@gmail.com` );
-        const url = `${ dataToCreatePaymentMethod.url }?TBK_TOKEN=${ dataToCreatePaymentMethod.token }`;
-
-        const tbkToken = await cardRegisterFlow( page, url );
+      test( 'should returns keys to transaction', async ( { page } ) => {
+        const url = await getUrlToCardRegister();
+        const tbkToken = await getTokenAfterCardRegister( page, url );
 
         const paymentMethodConfirmator = new PaymentMethodConfirmator( paymentMethodImplementation );
 
@@ -86,7 +91,16 @@ test.describe( 'Infrastructure Transbank One Click', () => {
     } );
 
     test.describe( 'PaymentMethodDeleter', () => {
-      // test('should delete payment method', async () => {})
+      test( 'should delete payment method', async ( { page } ) => {
+        const paymentMethodConfirmator = new PaymentMethodConfirmator( paymentMethodImplementation );
+        const paymentMethodDeleter = new PaymentMethodDeleter( paymentMethodImplementation );
+        const url = await getUrlToCardRegister();
+        const tbkToken = await getTokenAfterCardRegister( page, url );
+
+        await paymentMethodConfirmator.invoke( tbkToken );
+
+        await expect( paymentMethodDeleter.invoke() ).resolves.toBeUndefined();
+      } );
     } );
   } );
 } );
