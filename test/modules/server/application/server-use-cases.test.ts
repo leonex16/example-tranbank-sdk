@@ -10,7 +10,7 @@ test.describe( 'Application Server', () => {
     const server = new ServerListener( spyServer );
     await server.invoke( 8080 );
 
-    expect( spyServer.methodCalled ).toBe( true );
+    expect( spyServer.methodCalledCounter ).toBe( 1 );
     expect( spyServer.passedPort ).toBe( 8080 );
   } );
 

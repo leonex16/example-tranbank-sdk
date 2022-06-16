@@ -66,7 +66,7 @@ test.beforeEach( () => {
   paymentMethodImplementation = new TransbankOneClickPaymentMethod();
 } );
 
-test.describe( 'Infrastructure Transbank One Click', () => {
+test.describe( 'Infrastructure Payment Method Transbank One Click', () => {
   test.describe( 'PaymentMethod', () => {
     test.describe( 'PaymentMethodCreator', () => {
       test( 'should returns url and token', async () => {
