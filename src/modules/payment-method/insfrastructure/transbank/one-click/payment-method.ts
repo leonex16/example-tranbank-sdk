@@ -47,7 +47,7 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
         number: resp.card_number
       },
       tbkUser: resp.tbk_user
-    }
+    };
   }
 
   async delete () {

@@ -4,7 +4,7 @@ export class Container {
   private static _registry: Map<string, any> = new Map();
 
   static register ( key: DependencyKey, instance: any ) {
-    if ( Container._registry.has( key ) === false ) Container._registry.set( key, instance );;
+    if ( Container._registry.has( key ) === false ) Container._registry.set( key, instance );
     return this;
   }
 
@@ -26,7 +26,7 @@ export function InjectionTarget () {
     return class extends constructor {
       constructor ( ...args: any[] ) {
         const injections = ( constructor as any ).injections as Injection[];
-        const injectedArgs: any[] = injections.map( ( { index, key } ) => args[index] ?? Container.getInstance( key ) );
+        const injectedArgs: any[] = injections.map( ( { index, key } ) => args[ index ] ?? Container.getInstance( key ) );
 
         super( ...injectedArgs );
       }

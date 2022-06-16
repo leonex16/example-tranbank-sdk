@@ -1,9 +1,11 @@
-import { IntegrationApiKeys, IntegrationCommerceCodes, Oneclick, Options, TransactionDetail  } from 'transbank-sdk';
+import { IntegrationApiKeys, IntegrationCommerceCodes, Oneclick, Options, TransactionDetail } from 'transbank-sdk';
+
 import type MallTransaction from 'transbank-sdk/dist/es5/transbank/webpay/oneclick/mall_transaction';
 
+import { SimultaneousTransaction } from '#src/modules/simultaneous-transaction/domain/simultaneous-transaction';
 import { TranskbankUrlEnvironment } from '#src/modules/payment-method/insfrastructure/transbank/one-click/payment-method';
-import { SimultaneousTransaction } from "#src/modules/simultaneous-transaction/domain/simultaneous-transaction";
-import type { TranbankTransaction, TransbankRefound, TransactionItem } from '#src/modules/simultaneous-transaction/infrastructure/transbank/one-click/types';
+
+import type { TranbankTransaction, TransactionItem, TransbankRefound } from '#src/modules/simultaneous-transaction/infrastructure/transbank/one-click/types';
 
 export class TransbankOneClickTransaction implements SimultaneousTransaction {
   private URL_ENVIRONMENT = TranskbankUrlEnvironment.DEV; // MOVE TO ENV
@@ -14,38 +16,38 @@ export class TransbankOneClickTransaction implements SimultaneousTransaction {
     const opts = new Options( IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, this.URL_ENVIRONMENT );
     this.transaction = new Oneclick.MallTransaction( opts );
   }
-  
-  async autorize(username: string, tbkUser: string, purchaseOrder: string, detail: TransactionItem[]) {
+
+  async autorize ( username: string, tbkUser: string, purchaseOrder: string, detail: TransactionItem[] ) {
     const commerceCode = IntegrationCommerceCodes.ONECLICK_MALL_CHILD1;
-    const purchaseOrderChildBase = this.generateChildPurchaseOrderId(purchaseOrder);
-    const items = detail.map((item, i) => new TransactionDetail(item.amount, commerceCode, `${purchaseOrderChildBase}-${++i}`, item.installments))
-    const transaction: TranbankTransaction = await this.transaction.authorize(username, tbkUser, `${purchaseOrderChildBase}-0`, items)
+    const purchaseOrderChildBase = this.generateChildPurchaseOrderId( purchaseOrder );
+    const items = detail.map( ( item, i ) => new TransactionDetail( item.amount, commerceCode, `${ purchaseOrderChildBase }-${ ++i }`, item.installments ) );
+    const transaction: TranbankTransaction = await this.transaction.authorize( username, tbkUser, `${ purchaseOrderChildBase }-0`, items );
     let successAuthorization = false;
 
-    for (const item of transaction.details) {
+    for ( const item of transaction.details ) {
       const statusOk = item.status === 'AUTHORIZED';
       const responseOk = item.response_code === 0;
       const shouldReject = !statusOk || !responseOk;
 
       successAuthorization = !shouldReject;
 
-      if( shouldReject ) break;
+      if ( shouldReject ) break;
     }
 
     return {
-      purchaseOrder: successAuthorization ? transaction : null,
+      purchaseOrder: successAuthorization ? transaction : null
     };
   }
 
-  async getStatus(purchaseOrder: string) {
-    const transaction: TranbankTransaction = await this.transaction.status(purchaseOrder);
+  async getStatus ( purchaseOrder: string ) {
+    const transaction: TranbankTransaction = await this.transaction.status( purchaseOrder );
     return transaction;
   }
 
-  async reverse(mainPurchaseOrder: string, childPurchaseOrder: string, amount: number) {
+  async reverse ( mainPurchaseOrder: string, childPurchaseOrder: string, amount: number ) {
     const commerceCode = IntegrationCommerceCodes.ONECLICK_MALL_CHILD1;
-    const response: TransbankRefound = await this.transaction.refund(mainPurchaseOrder, commerceCode, childPurchaseOrder, amount);
-    
+    const response: TransbankRefound = await this.transaction.refund( mainPurchaseOrder, commerceCode, childPurchaseOrder, amount );
+
     return response;
   }
 
@@ -55,8 +57,8 @@ export class TransbankOneClickTransaction implements SimultaneousTransaction {
   //   return response;
   // }
 
-  private generateChildPurchaseOrderId(mainPurchaseOrder: string): string {
-    return `${mainPurchaseOrder}XXX`;
+  private generateChildPurchaseOrderId ( mainPurchaseOrder: string ): string {
+    return `${ mainPurchaseOrder }XXX`;
     // return `${mainPurchaseOrder}${new Date().getTime()}`;
   }
 }

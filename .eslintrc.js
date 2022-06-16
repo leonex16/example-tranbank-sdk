@@ -9,7 +9,7 @@ const ENVS = {
     RULES: {
       '@typescript-eslint/indent': [ VALUE_RULE.ERROR, 2 ],
       '@typescript-eslint/no-explicit-any': VALUE_RULE.OFF,
-      '@typescript-eslint/no-unused-vars': [ VALUE_RULE.WARN, { varsIgnorePattern: '_', argsIgnorePattern: true } ],
+      '@typescript-eslint/no-unused-vars': [ VALUE_RULE.ERROR, { argsIgnorePattern: '^_' } ],
       '@typescript-eslint/no-shadow': [ VALUE_RULE.ERROR ],
       '@typescript-eslint/no-useless-constructor': VALUE_RULE.ERROR,
       'no-shadow': VALUE_RULE.OFF,
@@ -91,7 +91,7 @@ const ENVS = {
       'no-restricted-syntax': VALUE_RULE.OFF,
       'no-underscore-dangle': VALUE_RULE.OFF,
       'no-unused-expressions': [ VALUE_RULE.ERROR, { allowTernary: true } ],
-      'no-unused-vars': VALUE_RULE.ERROR,
+      'no-unused-vars': VALUE_RULE.OFF,
       'object-curly-spacing': [ VALUE_RULE.ERROR, 'always' ],
       'prefer-promise-reject-errors': VALUE_RULE.ERROR,
       'require-atomic-updates': VALUE_RULE.ERROR,
@@ -144,12 +144,12 @@ module.exports = {
   },
   plugins: [
     ...ENVS.ESLINT.PLUGINS,
-    ...ENVS.TS.PLUGINS,
+    ...ENVS.TS.PLUGINS
     // ...ENVS.JEST.PLUGINS,
   ],
   rules: {
     ...ENVS.ESLINT.RULES,
-    ...ENVS.TS.RULES,
+    ...ENVS.TS.RULES
     // ...ENVS.JEST.RULES,
   }
 };

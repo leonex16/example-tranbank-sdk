@@ -1,7 +1,7 @@
 export interface SimultaneousTransaction {
-  autorize(username: string, tbkUser: string, purchaseOrder: string, detail: unknown[]): Promise<any>;
-  getStatus(purchaseOrder: string): Promise<any>;
-  reverse(mainPurchaseOrder: string, childPurchaseOrder: string, amount: number): Promise<any>;
+  autorize( username: string, tbkUser: string, purchaseOrder: string, detail: unknown[] ): Promise<any>;
+  getStatus( purchaseOrder: string ): Promise<any>;
+  reverse( mainPurchaseOrder: string, childPurchaseOrder: string, amount: number ): Promise<any>;
   // deferredCapture(purchaseOrder: string, amountToCapture: number, authorizationCode: string): Promise<any>;
 }
 
@@ -21,4 +21,3 @@ export interface SimultaneousTransaction {
 //     return this._transaction.deferredCapture(purchaseOrder, amountToCapture, authorizationCode)
 //   }
 // }
-
