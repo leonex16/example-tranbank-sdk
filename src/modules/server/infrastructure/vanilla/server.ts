@@ -3,6 +3,10 @@ import http from 'node:http';
 import { PaymentMethodConfirmator } from '#src/modules/payment-method/application/payment-method-confirmator';
 import { PaymentMethodCreator } from '#src/modules/payment-method/application/payment-method-creator';
 import { PaymentMethodDeleter } from '#src/modules/payment-method/application/payment-method-deleter';
+import { SimultaneousTransactionAuthorizator } from '#src/modules/simultaneous-transaction/application/simultaneous-transaction-authorizator';
+import { SimultaneousTransactionReversor } from '#src/modules/simultaneous-transaction/application/simultaneous-transaction-reversor';
+import { SimultaneousTransactionStatus } from '#src/modules/simultaneous-transaction/application/simultaneous-transaction-status';
+
 import { Server } from '#src/modules/server/domain/server';
 import { version } from '../../../../../package.json';
 
@@ -33,7 +37,7 @@ export class NodeServer implements Server {
       return;
     }
 
-    if ( method === 'GET' && pathname === '/payment-method/inscription' ) {
+    if ( method === 'GET' && pathname === '/simultaneous/payment-method/inscription' ) {
       const username = searchParams.get( 'username' );
       const email = searchParams.get( 'email' );
 
@@ -47,7 +51,7 @@ export class NodeServer implements Server {
       return;
     }
 
-    if ( method === 'POST' && pathname === '/payment-method/confirm' ) {
+    if ( method === 'POST' && pathname === '/simultaneous/payment-method/confirm' ) {
       const tbkTkn = req.headers[ 'tbk-token' ];
 
       if ( tbkTkn === undefined ) throw new Error( 'tbk-token is required' );
@@ -61,7 +65,7 @@ export class NodeServer implements Server {
       return;
     }
 
-    if ( method === 'DELETE' && pathname === '/payment-method/delete' ) {
+    if ( method === 'DELETE' && pathname === '/simultaneous/payment-method/delete' ) {
       const paymentMethodDeleter = new PaymentMethodDeleter();
       await paymentMethodDeleter.invoke();
 
@@ -70,7 +74,66 @@ export class NodeServer implements Server {
       return;
     }
 
+    if ( method === 'POST' && pathname === '/simultaneous/transaction/authorizate' ) {
+      const body = await getBody( req );
+
+      if ( body === null ) throw new Error( 'Body is required' );
+      if ( body[ 'username' ] === null ) throw new Error( 'Username is required' );
+      if ( body[ 'tbkUser' ] === null ) throw new Error( 'TbkUser is required' );
+      if ( body[ 'purchaseOrder' ] === null ) throw new Error( 'PurchaseOrder is required' );
+      if ( body[ 'detail' ] === null ) throw new Error( 'Detail is required' );
+
+      const { username, tbkUser, purchaseOrder, detail } = body;
+      const simultaneousTransactionAuthorizator = new SimultaneousTransactionAuthorizator();
+
+      res.writeHead( 200, { 'Content-Type': 'application/json' } );
+      res.end( JSON.stringify( await simultaneousTransactionAuthorizator.invoke( username, tbkUser, purchaseOrder, detail ) ) );
+      return;
+    }
+
+    if ( method === 'GET' && pathname === '/simultaneous/transaction/status' ) {
+      const purchaseOrder = searchParams.get( 'purchaseOrder' );
+
+      if ( purchaseOrder === null ) throw new Error( 'PurchaseOrder is required' );
+
+      const simultaneousTransactionAuthorizator = new SimultaneousTransactionStatus();
+
+      res.writeHead( 200, { 'Content-Type': 'application/json' } );
+      res.end( JSON.stringify( await simultaneousTransactionAuthorizator.invoke( purchaseOrder ) ) );
+      return;
+    }
+
+    if ( method === 'POST' && pathname === '/simultaneous/transaction/reverse' ) {
+      const body = await getBody( req );
+
+      if ( body === null ) throw new Error( 'Body is required' );
+      if ( body[ 'mainPurchaseOrder' ] === null ) throw new Error( 'MainPurchaseOrder is required' );
+      if ( body[ 'childPurchaseOrder' ] === null ) throw new Error( 'ChildPurchaseOrder is required' );
+      if ( body[ 'amount' ] === null ) throw new Error( 'Amount is required' );
+
+      const { mainPurchaseOrder, childPurchaseOrder, amount } = body;
+      const simultaneousTransactionAuthorizator = new SimultaneousTransactionReversor();
+
+      res.writeHead( 200, { 'Content-Type': 'application/json' } );
+      res.end( JSON.stringify( await simultaneousTransactionAuthorizator.invoke( mainPurchaseOrder, childPurchaseOrder, amount ) ) );
+      return;
+    }
+
     res.writeHead( 404 );
     res.end();
   }
+}
+
+async function getBody ( req: http.IncomingMessage ) {
+  return new Promise<Record<string, any> | null>( resolve => {
+    let body = '';
+
+    req.on( 'data', ( chunk: Buffer ) => {
+      body += chunk.toString();
+    } );
+
+    req.on( 'end', () => {
+      resolve( JSON.parse( body ) );
+    } );
+  } );
 }
