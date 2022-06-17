@@ -32,8 +32,9 @@ test.describe( 'Infrastructure NodeServer', () => {
     expect( json.version ).toBe( version );
   } );
 
-  test( 'shoud get url and token', async ( { request } ) => {
-    const apiResponse = await request.get( '/payment-method/inscription?username=jane&email=janedoe@gmail.com' );
+  // Depend of NodeServer... I can not test this. This is a remember to test .
+  test.skip( 'shoud return a status code 200 and url and token', async ( { request } ) => {
+    const apiResponse = await request.get( '/simultaneous/payment-method/inscription?username=jane&email=janedoe@gmail.com' );
     const json = await apiResponse.json();
 
     expect( apiResponse.status() ).toBe( 200 );
@@ -41,13 +42,13 @@ test.describe( 'Infrastructure NodeServer', () => {
     expect( json.token ).toBeDefined();
   } );
 
-  test.skip( 'shoud return 204 when the payment method was confirmed', async ( { request } ) => {
-    const headers = { 'tbk-token': '123456789' };
-    const apiResponse = await request.post( '/payment-method/confirm', { headers } );
+  // Depend of NodeServer... I can not test this. This is a remember to test .
+  test.skip( 'shoud return a status code 200 and tbkToken', async ( { request } ) => {
+    const headers = { 'tbk-token': 'a0ece32c-8b50-45e8-9fbd-0c76fbea3dbd' };
+    const apiResponse = await request.post( '/simultaneous/payment-method/confirm', { headers } );
     const json = await apiResponse.json();
 
-    expect( apiResponse.status() ).toBe( 204 );
-    expect( json.url ).toBeDefined();
-    expect( json.token ).toBeDefined();
+    expect( apiResponse.status() ).toBe( 200 );
+    expect( json.tbkTokon ).toBeDefined();
   } );
 } );
