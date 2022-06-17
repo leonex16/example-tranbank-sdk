@@ -1,11 +1,11 @@
 import http from 'node:http';
 
-import { PaymentMethodConfirmator } from '#src/modules/payment-method/application/payment-method-confirmator';
-import { PaymentMethodCreator } from '#src/modules/payment-method/application/payment-method-creator';
-import { PaymentMethodDeleter } from '#src/modules/payment-method/application/payment-method-deleter';
-import { SimultaneousTransactionAuthorizator } from '#src/modules/simultaneous-transaction/application/simultaneous-transaction-authorizator';
-import { SimultaneousTransactionReversor } from '#src/modules/simultaneous-transaction/application/simultaneous-transaction-reversor';
-import { SimultaneousTransactionStatus } from '#src/modules/simultaneous-transaction/application/simultaneous-transaction-status';
+import { PaymentMethodConfirmator } from '#src/modules/simultaneous/payment-method/application/payment-method-confirmator';
+import { PaymentMethodCreator } from '#src/modules/simultaneous/payment-method/application/payment-method-creator';
+import { PaymentMethodDeleter } from '#src/modules/simultaneous/payment-method/application/payment-method-deleter';
+import { TransactionAuthorizator } from '#src/modules/simultaneous/transaction/application/transaction-authorizator';
+import { TransactionReversor } from '#src/modules/simultaneous/transaction/application/transaction-reversor';
+import { TransactionStatus } from '#src/modules/simultaneous/transaction/application/transaction-status';
 
 import { Server } from '#src/modules/server/domain/server';
 import { version } from '../../../../../package.json';
@@ -84,7 +84,7 @@ export class NodeServer implements Server {
       if ( body[ 'detail' ] === null ) throw new Error( 'Detail is required' );
 
       const { username, tbkUser, purchaseOrder, detail } = body;
-      const simultaneousTransactionAuthorizator = new SimultaneousTransactionAuthorizator();
+      const simultaneousTransactionAuthorizator = new TransactionAuthorizator();
 
       res.writeHead( 200, { 'Content-Type': 'application/json' } );
       res.end( JSON.stringify( await simultaneousTransactionAuthorizator.invoke( username, tbkUser, purchaseOrder, detail ) ) );
@@ -96,7 +96,7 @@ export class NodeServer implements Server {
 
       if ( purchaseOrder === null ) throw new Error( 'PurchaseOrder is required' );
 
-      const simultaneousTransactionAuthorizator = new SimultaneousTransactionStatus();
+      const simultaneousTransactionAuthorizator = new TransactionStatus();
 
       res.writeHead( 200, { 'Content-Type': 'application/json' } );
       res.end( JSON.stringify( await simultaneousTransactionAuthorizator.invoke( purchaseOrder ) ) );
@@ -112,7 +112,7 @@ export class NodeServer implements Server {
       if ( body[ 'amount' ] === null ) throw new Error( 'Amount is required' );
 
       const { mainPurchaseOrder, childPurchaseOrder, amount } = body;
-      const simultaneousTransactionAuthorizator = new SimultaneousTransactionReversor();
+      const simultaneousTransactionAuthorizator = new TransactionReversor();
 
       res.writeHead( 200, { 'Content-Type': 'application/json' } );
       res.end( JSON.stringify( await simultaneousTransactionAuthorizator.invoke( mainPurchaseOrder, childPurchaseOrder, amount ) ) );

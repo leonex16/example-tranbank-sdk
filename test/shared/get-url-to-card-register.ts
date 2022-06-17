@@ -1,4 +1,4 @@
-import { PaymentMethod } from '../../src/modules/payment-method/domain/payment-method';
+import { PaymentMethod } from '../../src/modules/simultaneous/payment-method/domain/payment-method';
 import { PaymentMethodCreator } from '../../dist/src/modules/payment-method/application/payment-method-creator';
 
 export const getUrlToCardRegister = async ( paymentMethodImplementation: PaymentMethod ) => {

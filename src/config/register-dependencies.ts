@@ -1,8 +1,9 @@
+/* eslint-disable max-len */
 import { Container } from '#src/shared/domain/service/dependency-injection/index';
-import { DeferredTransbankOneClickTransaction } from '#src/modules/deferred-transaction/infrastructure/transbank/one-click/deferred-transaction';
+import { TransbankOneClickTransaction as DeferredTransbankOneClickTransaction } from '#src/modules/deferred/transaction/infrastructure/transbank/one-click/transaction';
 import { NodeServer } from '#src/modules/server/infrastructure/vanilla/server';
-import { SimultaneousTransbankOneClickTransaction } from '#src/modules/simultaneous-transaction/infrastructure/transbank/one-click/simultaneous-transaction';
-import { TransbankOneClickPaymentMethod } from '#src/modules/payment-method/insfrastructure/transbank/one-click/payment-method';
+import { TransbankOneClickTransaction as SimultaneousTransbankOneClickTransaction } from '#src/modules/simultaneous/transaction/infrastructure/transbank/one-click/transaction';
+import { TransbankOneClickPaymentMethod } from '#src/modules/simultaneous/payment-method/insfrastructure/transbank/one-click/payment-method';
 
 export const registerDependencies = () => {
   Container
