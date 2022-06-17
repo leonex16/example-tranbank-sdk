@@ -1,4 +1,4 @@
-# One Click
+# Example TS One Click
 
 API building with Typescript that exposes the transbank SDK methods to integrate one click on your application.
 
