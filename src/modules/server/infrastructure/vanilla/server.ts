@@ -14,6 +14,11 @@ const parseToUrl = ( path = '/' ) => new URL( path, 'http://localhost' );
 
 export class NodeServer implements Server {
   private readonly _server: http.Server;
+  private readonly headers: http.OutgoingHttpHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+    'Access-Control-Max-Age': 2592000 // 30 days
+  };
 
   constructor () {
     this._server = http.createServer( this.router );
@@ -30,6 +35,28 @@ export class NodeServer implements Server {
   private async router ( req: http.IncomingMessage, res: http.ServerResponse ): Promise<void> {
     const { method, url: rawUrl } = req;
     const { pathname, searchParams } = parseToUrl( rawUrl );
+
+    res.setHeader( 'Access-Control-Allow-Origin', '*' );
+    res.setHeader( 'Access-Control-Allow-Headers', '*' );
+    res.setHeader( 'Access-Control-Allow-Methods', '*' );
+
+    if ( method === 'OPTIONS' ) {
+      const allowedEndpoints = [
+        '/',
+        '/simultaneous/payment-method/inscription',
+        '/simultaneous/payment-method/confirm',
+        '/simultaneous/payment-method/delete',
+        '/simultaneous/transaction/authorizate',
+        '/simultaneous/transaction/status',
+        '/simultaneous/transaction/reverse'
+      ];
+
+      if ( allowedEndpoints.includes( pathname ) ) {
+        res.writeHead( 204 );
+        res.end();
+        return;
+      }
+    }
 
     if ( method === 'GET' && pathname === '/' ) {
       res.writeHead( 200, { 'Content-Type': 'application/json' } );
