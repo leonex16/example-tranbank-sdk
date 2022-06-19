@@ -7,11 +7,12 @@ export class PaymentMethodCreator {
     @Inject( 'PaymentMethod' ) private readonly _paymentMethod?: PaymentMethod
   ) { }
 
-  invoke ( username: string, email: string ): Promise<{ url: string; token: string; }> {
+  invoke ( username: string, email: string, urlToRedirect: string ): Promise<{ url: string; token: string; }> {
     if ( !this._paymentMethod ) throw new Error( 'PaymentMethod is required' );
     if ( !username ) throw new Error( 'Username is required' );
     if ( !email ) throw new Error( 'Email is required' );
+    if ( !urlToRedirect ) throw new Error( 'UrlToRedirect is required' );
 
-    return this._paymentMethod.getUrlToAdd( username, email );
+    return this._paymentMethod.getUrlToAdd( username, email, urlToRedirect );
   }
 }

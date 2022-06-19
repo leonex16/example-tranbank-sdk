@@ -67,14 +67,16 @@ export class NodeServer implements Server {
     if ( method === 'GET' && pathname === '/simultaneous/payment-method/inscription' ) {
       const username = searchParams.get( 'username' );
       const email = searchParams.get( 'email' );
+      const urlToRedirect = searchParams.get( 'urlToRedirect' );
 
       if ( username === null ) throw new Error( 'Username is required' );
       if ( email === null ) throw new Error( 'Email is required' );
+      if ( urlToRedirect === null ) throw new Error( 'UrlToRedirect is required' );
 
       const paymentMethodCreator = new PaymentMethodCreator();
 
       res.writeHead( 200, { 'Content-Type': 'application/json' } );
-      res.end( JSON.stringify( await paymentMethodCreator.invoke( username, email ) ) );
+      res.end( JSON.stringify( await paymentMethodCreator.invoke( username, email, urlToRedirect ) ) );
       return;
     }
 
@@ -93,8 +95,15 @@ export class NodeServer implements Server {
     }
 
     if ( method === 'DELETE' && pathname === '/simultaneous/payment-method/delete' ) {
+      const body = await getBody( req );
+
+      if ( body === null ) throw new Error( 'Body is required' );
+      if ( body[ 'username' ] === null ) throw new Error( 'Username is required' );
+      if ( body[ 'tbkUser' ] === null ) throw new Error( 'TbkUser is required' );
+
+      const { username, tbkUser } = body;
       const paymentMethodDeleter = new PaymentMethodDeleter();
-      await paymentMethodDeleter.invoke();
+      await paymentMethodDeleter.invoke( tbkUser, username );
 
       res.writeHead( 204 );
       res.end();

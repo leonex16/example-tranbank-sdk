@@ -12,21 +12,17 @@ export enum TranskbankUrlEnvironment {
 }
 
 export class TransbankOneClickPaymentMethod implements PaymentMethod {
-  private URL_TO_REDIRECT = 'https://www.google.cl'; // MOVE TO ENV
   private URL_ENVIRONMENT = TranskbankUrlEnvironment.DEV; // MOVE TO ENV
 
-  private username: string | null = null;
   private inscription: MallInscription;
-  private tbkUser: string | null = null;
 
   constructor () {
     const opts = new Options( IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, this.URL_ENVIRONMENT );
     this.inscription = new Oneclick.MallInscription( opts );
   }
 
-  async getUrlToAdd ( username: string, email: string ) {
-    const resp: InscriptionStart = await this.inscription.start( username, email, this.URL_TO_REDIRECT );
-    this.username = username;
+  async getUrlToAdd ( username: string, email: string, urlToRedirect: string ) {
+    const resp: InscriptionStart = await this.inscription.start( username, email, urlToRedirect );
 
     return {
       url: resp.url_webpay,
@@ -37,8 +33,6 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
   async confirm ( token: string ): Promise<any> {
     const resp: InscriptionFinish = await this.inscription.finish( token );
 
-    this.tbkUser = resp.tbk_user;
-
     return {
       card: {
         type: resp.card_type,
@@ -48,10 +42,7 @@ export class TransbankOneClickPaymentMethod implements PaymentMethod {
     };
   }
 
-  async delete () {
-    if ( !this.username ) throw new Error( 'No username provided' );
-    if ( !this.tbkUser ) throw new Error( 'No tbkUser setting' );
-
-    await this.inscription.delete( this.tbkUser, this.username );
+  async delete ( token: string, username: string ) {
+    await this.inscription.delete( token, username );
   }
 }
