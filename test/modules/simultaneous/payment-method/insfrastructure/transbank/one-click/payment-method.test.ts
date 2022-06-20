@@ -7,8 +7,8 @@ import { PaymentMethodCreator } from '../../../../../../../dist/src/modules/simu
 import { PaymentMethodDeleter } from '../../../../../../../dist/src/modules/simultaneous/payment-method/application/payment-method-deleter';
 import { TransbankOneClickPaymentMethod } from '../../../../../../../dist/src/modules/simultaneous/payment-method/insfrastructure/transbank/one-click/payment-method';
 
+import { getDataToCardRegister } from '../../../../../../shared/get-url-to-card-register';
 import { getTokenAfterCardRegister } from '../../../../../../shared/get-token-after-card-register';
-import { getUrlToCardRegister } from '../../../../../../shared/get-url-to-card-register';
 
 let paymentMethodImplementation: PaymentMethod;
 
@@ -22,7 +22,7 @@ test.describe( 'Infrastructure Payment Method Transbank One Click', () => {
       test( 'should returns url and token', async () => {
         const TBK_URL = 'https://webpay3gint.transbank.cl/webpayserver/bp_multicode_inscription.cgi';
         const paymentMethodCreator = new PaymentMethodCreator( paymentMethodImplementation );
-        const dataToCreatePaymentMethod = await paymentMethodCreator.invoke( 'jane', 'janedoe@gmail.com' );
+        const dataToCreatePaymentMethod = await paymentMethodCreator.invoke( 'jane', 'janedoe@gmail.com', 'http://localhost:3000/' );
 
         expect( dataToCreatePaymentMethod.url ).toBe( TBK_URL );
         expect( dataToCreatePaymentMethod.token ).toBeDefined();
@@ -31,7 +31,7 @@ test.describe( 'Infrastructure Payment Method Transbank One Click', () => {
 
     test.describe( 'PaymentMethodConfirmator', () => {
       test( 'should returns keys to transaction', async ( { page } ) => {
-        const url = await getUrlToCardRegister( paymentMethodImplementation );
+        const { url } = await getDataToCardRegister( paymentMethodImplementation );
         const tbkToken = await getTokenAfterCardRegister( page, url );
 
         const paymentMethodConfirmator = new PaymentMethodConfirmator( paymentMethodImplementation );
@@ -44,12 +44,12 @@ test.describe( 'Infrastructure Payment Method Transbank One Click', () => {
       test( 'should delete payment method', async ( { page } ) => {
         const paymentMethodConfirmator = new PaymentMethodConfirmator( paymentMethodImplementation );
         const paymentMethodDeleter = new PaymentMethodDeleter( paymentMethodImplementation );
-        const url = await getUrlToCardRegister( paymentMethodImplementation );
+        const { url, username } = await getDataToCardRegister( paymentMethodImplementation );
         const tbkToken = await getTokenAfterCardRegister( page, url );
 
-        await paymentMethodConfirmator.invoke( tbkToken );
+        const { tbkUser } = await paymentMethodConfirmator.invoke( tbkToken );
 
-        await expect( paymentMethodDeleter.invoke() ).resolves.toBeUndefined();
+        await expect( paymentMethodDeleter.invoke( tbkUser, username ) ).resolves.toBeUndefined();
       } );
     } );
   } );

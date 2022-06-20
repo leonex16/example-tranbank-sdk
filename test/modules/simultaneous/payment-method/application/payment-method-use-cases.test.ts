@@ -11,7 +11,7 @@ test.describe( 'Application Payment Method', () => {
     test( 'should called invoke method', async () => {
       const paymentMethodSpy = new PaymentMethodSpy();
       const paymentMethodCreator = new PaymentMethodCreator( paymentMethodSpy );
-      await paymentMethodCreator.invoke( 'USER', 'EMAIL' );
+      await paymentMethodCreator.invoke( 'USER', 'EMAIL', 'URL_TO_REDIRECT' );
 
       expect( paymentMethodSpy.methodCalledCounter ).toBe( 1 );
     } );
@@ -19,7 +19,7 @@ test.describe( 'Application Payment Method', () => {
     test( 'should inyject automatically its dependecy', async () => {
       registerDependencies();
       const paymentMethodCreator = new PaymentMethodCreator();
-      const data = await paymentMethodCreator.invoke( 'janedoe', 'janedoe@gmail.com' );
+      const data = await paymentMethodCreator.invoke( 'janedoe', 'janedoe@gmail.com', 'http://localhost:3000/' );
 
       expect( data ).toBeDefined();
     } );
@@ -46,7 +46,7 @@ test.describe( 'Application Payment Method', () => {
     test( 'should called invoke method', async () => {
       const paymentMethodSpy = new PaymentMethodSpy();
       const paymentMethodDeleter = new PaymentMethodDeleter( paymentMethodSpy );
-      await paymentMethodDeleter.invoke();
+      await paymentMethodDeleter.invoke( 'TOKEN', 'USERNAME' );
 
       expect( paymentMethodSpy.methodCalledCounter ).toBe( 1 );
     } );
